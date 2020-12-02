@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-java
+spec:
+  selector:
+    matchLabels:
+      app: user-java
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: user-java
+    spec:
+      containers:
+      - name: user-java
+        image: registryehf3159.azurecr.io/tripinsights/user-java:latest
+        env:
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: tisecrets
+              key: sqluser
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tisecrets
+              key: sqlpassword
+        - name: SQL_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: tisecrets
+              key: sqlserver
+        - name: SQL_DBNAME
+          valueFrom:
+            secretKeyRef:
+              name: tisecrets
+              key: sqldbname
+        - name: ASPNETCORE_ENVIRONMENT
+          valueFrom:
+            secretKeyRef:
+              name: tisecrets
+              key: aspnetcore_environment
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-java
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: user-java
