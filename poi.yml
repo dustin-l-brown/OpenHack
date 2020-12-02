@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: poi
+  template:
+    metadata:
+      labels:
+        app: poi
+    spec:
+      containers:
+      - name: poi
+        image: registryehf3159.azurecr.io/tripinsights/poi:1.0
+        env:
+        - name: poi
+          value: "yes"
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: tisecrets
+              key: sqluser
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tisecrets
+              key: sqlpassword
+        - name: SQL_SERVER
+          value: "sqlserverehf3159.database.windows.net"
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Development"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+          name: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: poi
+spec:
+  ports:
+  - port: 8080
+  selector:
+    app: poi

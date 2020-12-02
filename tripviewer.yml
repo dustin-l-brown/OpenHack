@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tripviewer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tripviewer
+  template:
+    metadata:
+      labels:
+        app: tripviewer
+    spec:
+      containers:
+      - name: tripviewer
+        image: registryehf3159.azurecr.io/tripinsights/tripviewer:1.0
+        env:
+        - name: tripviewer
+          value: "yes"
+        - name: BING_MAPS_KEY
+          value: Apaa_tRfrVqCslxccg6iuM_ECMcM77mrFVkvlCsZRuIrbgQyatd65bzQVPB83yVH
+        - name: TRIPS_API_ENDPOINT
+          value: "http://trips:80"
+        - name: USERPROFILE_API_ENDPOINT
+          value: "http://userprofile:80"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+          name: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tripviewer
+spec:
+  ports:
+  - port: 8080
+  selector:
+    app: tripviewer
