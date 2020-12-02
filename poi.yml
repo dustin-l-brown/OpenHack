@@ -41,7 +41,7 @@ spec:
             memory: 256Mi
         ports:
         - containerPort: 80
-          name: redis
+          name: poi
 ---
 apiVersion: v1
 kind: Service
@@ -49,6 +49,6 @@ metadata:
   name: poi
 spec:
   ports:
-  - port: 8080
+  - port: 80
   selector:
     app: poi
