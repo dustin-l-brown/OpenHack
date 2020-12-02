@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trips
+spec:
+  selector:
+    matchLabels:
+      app: trips
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: trips
+    spec:
+      containers:
+      - name: trips
+        image: registryehf3159.azurecr.io/tripinsights/trips:1.0
+        env:
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: tisecrets
+              key: sqluser
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tisecrets
+              key: sqlpassword
+        - name: SQL_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: tisecrets
+              key: sqlserver
+        - name: SQL_DBNAME
+          valueFrom:
+            secretKeyRef:
+              name: tisecrets
+              key: sqldbname
+        - name: ASPNETCORE_ENVIRONMENT
+          valueFrom:
+            secretKeyRef:
+              name: tisecrets
+              key: aspnetcore_environment
+        ports:
+        - containerPort: 80
+          name: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trips
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: trips
