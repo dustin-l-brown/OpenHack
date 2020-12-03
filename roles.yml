@@ -1,0 +1,42 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: web-namespace
+  name: edit-web-namespace
+rules:
+- verbs: ["create", "delete", "update", "patch", "get", "list", "watch"]
+  apiGroups: ["*"]
+  resources: ["*"]
+
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1 
+metadata:
+  namespace: web-namespace
+  name: read-web-namespace
+rules:
+- verbs: ["get", "list", "watch"]
+  apiGroups: ["*"]
+  resources: ["*"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: api-namespace
+  name: edit-api-namespace
+rules:
+- verbs: ["create", "delete", "update", "patch", "get", "list", "watch"]
+  apiGroups: ["*"]
+  resources: ["*"]
+
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1 
+metadata:
+  namespace: api-namespace
+  name: read-api-namespace
+rules:
+- verbs: ["get", "list", "watch"]
+  apiGroups: ["*"]
+  resources: ["*"]

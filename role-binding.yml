@@ -1,0 +1,62 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: webdev-edit
+  namespace: web-namespace
+subjects:
+- kind: Group
+  name: cbac0953-97f1-4efb-b909-817326bf137d # web-developers
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  # "roleRef" specifies the binding to a Role / ClusterRole
+  kind: ClusterRole 
+  name: edit # this must match the name of the Role or ClusterRole you wish to bind to, edit is a defalt role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: webdev-read-api
+  namespace: api-namespace
+subjects:
+- kind: Group
+  name: cbac0953-97f1-4efb-b909-817326bf137d # web-developers
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  # "roleRef" specifies the binding to a Role / ClusterRole
+  kind: ClusterRole 
+  name: view # this must match the name of the Role or ClusterRole you wish to bind to, view is a default role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: apidev-edit
+  namespace: api-namespace
+subjects:
+- kind: Group
+  name: 6a63fdca-06f6-47f0-b5c1-e65dba7eee34 # api-developers
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  # "roleRef" specifies the binding to a Role / ClusterRole
+  kind: ClusterRole 
+  name: edit # this must match the name of the Role or ClusterRole you wish to bind to
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: apidev-read-web
+  namespace: web-namespace
+subjects:
+- kind: Group
+  name: 6a63fdca-06f6-47f0-b5c1-e65dba7eee34 # api-developers
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  # "roleRef" specifies the binding to a Role / ClusterRole
+  kind: ClusterRole 
+  name: view # this must match the name of the Role or ClusterRole you wish to bind to
+  apiGroup: rbac.authorization.k8s.io
