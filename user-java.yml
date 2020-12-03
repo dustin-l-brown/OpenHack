@@ -20,30 +20,38 @@ spec:
         - name: SQL_USER
           valueFrom:
             secretKeyRef:
-              name: tisecrets
-              key: sqluser
+              name: sqlusersecret
+              key: sqluserkey
         - name: SQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: tisecrets
-              key: sqlpassword
+              name: sqlpasswordsecret
+              key: sqlpasswordkey
         - name: SQL_SERVER
           valueFrom:
             secretKeyRef:
-              name: tisecrets
-              key: sqlserver
+              name: sqlserversecret
+              key: sqlserverkey
         - name: SQL_DBNAME
           valueFrom:
             secretKeyRef:
-              name: tisecrets
-              key: sqldbname
-        - name: ASPNETCORE_ENVIRONMENT
-          valueFrom:
-            secretKeyRef:
-              name: tisecrets
-              key: aspnetcore_environment
+              name: sqldbnamesecret
+              key: sqldbnamekey
         ports:
         - containerPort: 80
+        volumeMounts:
+          - name: secrets-store-inline
+            mountPath: "/mnt/secrets-store"
+            readOnly: true
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "azure-kvname"
+            nodePublishSecretRef:                       # Only required when using service principal mode
+              name: secrets-store-creds    
 ---
 apiVersion: v1
 kind: Service
